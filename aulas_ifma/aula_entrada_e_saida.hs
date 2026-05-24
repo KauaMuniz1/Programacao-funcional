@@ -1,0 +1,1 @@
+--ainda n escrevi nd LMAO
