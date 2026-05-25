@@ -1,12 +1,13 @@
 import Control.Concurrent (Chan)
 import Control.Monad.Cont (label)
 import GHC.Float (fromRat'')
+import Distribution.TestSuite (Result(Error))
 --funcao que retorna se um numero pertence ou nao a uma lista
 
 pertenceLista :: [Int] -> Int -> Bool
 pertenceLista [] _= False
 pertenceLista (x:xs) n
-   |x == n    = True
+   |x == n    = True 
    |otherwise = pertenceLista xs n
 
 
@@ -23,11 +24,24 @@ maiorElemento (x:xs)
 
 --Escreva uma função que receba um número inteiro positivo n,
 --uma lista e retorne o n-ésimo elemento da lista.
---enesimoElem :: Int -> [Char]-> Char
---enesimoElem i l
+enesimoInt :: Int -> [Int] -> Int
+enesimoInt _ [] = error "lista vazia"
+enesimoInt y (x : xs)
+   |y == 0 = x
+   |otherwise = enesimoInt (y-1) (xs)
 
 
 
+{-
+Escreva uma função que retire o n-ésimo elemento de uma lista.
+Exemplo:
+"abcdefghi" 3 -> "abdefghi"
+-}
+nEsimoElemento :: String -> Int -> String
+nEsimoElemento [] _ = error "palavra vazia"
+nEsimoElemento (x:xs) y
+   |y == 0 = xs
+   |otherwise = x : nEsimoElemento xs (y-1)
 
 
 
