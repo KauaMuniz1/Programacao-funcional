@@ -1,5 +1,6 @@
 import Data.Char
 import Distribution.Simple.Utils (xargs)
+import Distribution.Simple.Build (repl)
 --calcular o mmc:
 
 mmc :: Int -> Int -> Int
@@ -193,3 +194,21 @@ charParaInt :: Char -> Int
 charParaInt x
   |x >= '0' && x <= '9' = ord x - ord '0'
   |otherwise = 0
+
+
+--questao 4 
+romanoParaString :: Char -> String
+romanoParaString x 
+  |x == 'v' = "cinco"
+  |x == 'd' = "dez"
+  |x == 'i' = "um"
+  |x == 'c' = "cem"
+  |x == 'l' = "cinquenta"
+  |x == 'm' = "mil"
+
+
+replica :: String -> Int -> String
+replica x 0 = []
+replica x 1 = x
+replica x y 
+  |y > 1 = replica x (y-1) ++ x
