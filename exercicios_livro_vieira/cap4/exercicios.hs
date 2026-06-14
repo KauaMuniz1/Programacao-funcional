@@ -212,3 +212,32 @@ replica x 0 = []
 replica x 1 = x
 replica x y 
   |y > 1 = replica x (y-1) ++ x
+
+
+
+{-
+xercı́cios:
+1. Dê uma definição de uma função tabeladeFatoriais :: Int -> Int -> String que
+mostre, em forma de tabela, os fatoriais dos inteiros de m até n, inclusive de ambos.
+2. Refaça o exercı́cio anterior adimitindo a possibilidade de entradas negativas e de que o
+segundo argumento seja menor que o primeiro.
+-}
+
+--questao 1
+
+tabeladeFatoriais :: Int -> Int -> String
+tabeladeFatoriais m n
+    |m > n     = ""
+    |otherwise = show m ++ " -> " ++ show (fatorial m) ++ "\n"
+                  ++ tabeladeFatoriais (m + 1) n
+
+fatorial :: Int -> Int
+fatorial 0 = 1 
+fatorial n = n * fatorial (n-1)
+
+
+--questao 2 
+linha :: Int -> String
+linha x
+    |x < 0     = show x ++ " -> indefinido\n"
+    |otherwise = show x ++ " -> " ++ show (fatorial x) ++ "\n"
