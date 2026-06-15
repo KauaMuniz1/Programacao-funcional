@@ -127,18 +127,26 @@ Exemplo:
 intercede [1,2,3,4] [2,3,4,5] -> [2,3,4]
 
 -}
+intercede :: [Int] -> [Int] -> [Int]
+intercede [] _ = []
+intercede _ [] = []
+intercede (x:xs) (y:ys) 
+   |pertenceIntercede x (y:ys) == True = x : intercede xs (y:ys)
+   |otherwise = intercede xs (y:ys)
+   
+
+pertenceIntercede :: Int -> [Int] -> Bool 
+pertenceIntercede _ [] = False 
+pertenceIntercede n (x:xs)
+   |n == x = True
+   |otherwise = pertenceIntercede n (xs)
 
 
-
-
-
-
-
-
-
-
-
-
+--usando zf
+intercedeZF :: [Int] -> [Int] -> [Int]
+intercedeZF []_ = []
+intercedeZF _[] = []
+intercedeZF lista1 lista2 = [(x) | x <- lista1, y <- lista2, x == y ]
 
 
 
@@ -168,8 +176,28 @@ splitRecursao n (a:x) = (prim, a:seg)
 
 
 
+{-
+12. Escreva uma função que dados dois índices, m e n, extraia da
+lista os elementos compreendidos entre entre esses valores, onde
+ambos os limites estão incluídos. Comece a contar os elementos
+do 1.
+Exemplo:
+['a','b','c','d','e','f','g','h','i','k'] 3 7 -> "cdefg"
+-}
+
+selectElementos :: [Char] -> Int -> Int-> [Char]
+selectElementos [] _ _ = []
+selectElementos (x:xs) y z 
+   |z < y = error "intervalo negativo"
+   |y > 1 = selectElementos(xs) (y-1) (z-1)
+   |y == 1 && z > 1 =  head(x:xs) : selectElementos(xs) y (z-1)
+   |y == z = [x]
 
 
+--usando ZF
+selectElementosZF :: [Char] -> Int -> Int -> [Char]
+selectElementosZF [] _ _ = []
+selectElementosZF lista y z = [letra| (pos,letra) <- zip [1..]lista, pos >= y, pos <= z]
 
 
 {-
