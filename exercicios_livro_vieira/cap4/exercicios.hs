@@ -1,6 +1,10 @@
 import Data.Char
 import Distribution.Simple.Utils (xargs)
 import Distribution.Simple.Build (repl)
+import Control.Applicative (Alternative(empty))
+import Distribution.PackageDescription (qualifiedExeName)
+import Data.Time.Format.ISO8601 (yearFormat)
+import GHC.Base (VecElem(Int16ElemRep))
 --calcular o mmc:
 
 mmc :: Int -> Int -> Int
@@ -241,3 +245,159 @@ linha :: Int -> String
 linha x
     |x < 0     = show x ++ " -> indefinido\n"
     |otherwise = show x ++ " -> " ++ show (fatorial x) ++ "\n"
+
+
+--verificador de par ou impar
+ehImpar :: Int -> Bool
+ehImpar 0 = False
+ehImpar n = ehPar(n-1)
+
+ehPar :: Int -> Bool
+ehPar 0 = True
+ehPar n = ehImpar (n-1)
+
+
+--somar os quadrados usando where
+somaQuadrados :: Int -> Int -> Int 
+somaQuadrados n m = quadN + quadM 
+  where
+    quadN = n * n
+    quadM = m*m
+
+--qual dos quadrados é maior
+maximoQuadrado x y
+  |quadX > quadY = quadX 
+  |otherwise = quadY
+                where
+                  quadX = quad x
+                  quadY = quad y
+                  quad :: Int -> Int
+                  quad n = n*n 
+
+
+
+--maximo de ocorrencias
+maximasOcorrencias :: Int -> Int -> Int -> (Int, Int)
+maximasOcorrencias n m p = (maior, qtd)
+  where
+    maior = max (max n m) p
+    qtd = (if n == maior then 1 else 0) + (if m == maior then 1 else 0) + (if p == maior then 1 else 0)
+
+
+
+--equação do segundo grau(solucaodolivro)
+umaRaiz :: Float -> Float -> Float -> Float
+umaRaiz a b c = -b / (2 * a)
+
+duasRaizes:: Float -> Float -> Float -> (Float, Float)
+duasRaizes a b c = (d+e, d-e)
+  where 
+    d = -b / (2*a)
+    e = sqrt (b ^2 -4 * a * c) / (2*a)
+
+saida :: Float -> Float -> Float -> String
+saida a b c = cabecalho a b c ++ raizes a b c 
+
+cabecalho :: Float -> Float -> Float -> String 
+cabecalho a b c = "A equacao \n\n\t"++ show a ++ "*x^2"
+
+raizes :: Float -> Float -> Float -> String
+raizes a b c
+  | b^2 > 4.0 * a * c = "duas raizes reais e distintas: "
+  ++ show f ++ " e " ++ show s
+  |b^2 == 4.0 * a * c = "duas raizes reais e iguais: "
+  ++ show (umaRaiz a b c)
+  |otherwise = "nenhuma raiz real "
+    where (f, s) = duasRaizes a b c
+
+
+
+{-
+ Exercı́cios:
+Para os exercı́cios a seguir, considere os pontos do plano como sendo do tipo Ponto =
+(Float, Float). As linhas do plano são definidas por seus pontos inicial e final e têm o tipo
+Linha = (Ponto, Ponto).
+1. Defina funções que retornem a ordenada e a abcissa de um ponto.
+2. Defina uma função que retorne a norma de um vetor dado por suas coordenadas.
+3. Se uma linha é determinada pelos pontos (x1 , y1 ) e (x2 , y2 ), sua equação é definida por
+(y − y1 )/(x − x1 ) = (y2 − y1 )/(x2 − x1 ). Defina uma função do tipo valorY :: F loat− >
+Linha− > F loat que retorna a ordenada y do ponto (x, y), sendo dados x e uma linha.
+4. Dados dois vetores, u e v, determine se eles são, ou não, colineares. 
+-}
+
+
+
+
+
+
+
+
+
+
+
+{-
+4.7
+Exercı́cios propostos
+1. Dado um número natural n > 0, n é dito perfeito se a soma de seus divisores, incluindo o
+número 1, é igual ao próprio n. O primeiro número natural perfeito é o número 6, porque
+6 = 1 + 2 + 3. Implemente em Haskell uma função que informe se n é, ou não, um número
+perfeito.
+2. Dado um número natural n > 0, implemente em Haskell uma função que informe se n é,
+ou não, um número primo.
+3. Dê uma definição em Haskell da função f at que calcula o fatorial de n, onde n é um inteiro
+positivo.
+4. Dê uma definição em Haskell de uma função de m e n que retorna o produto m ∗ (m + 1) ∗
+. . . ∗ (n − 1) ∗ n, para m < n e retorne 0 se m ≥ 0.
+5. Dê uma definição em Haskell de uma função que retorne i -ésimo número da sequência de
+Fibonacci (0, 1, 1, 2...).
+6. Implemente, em Haskell, uma função que calcule o resto da divisão de dois números inteiros
+positivos.
+7. Implemente, em Haskell, uma função que calcule a divisão inteira entre dois números
+inteiros positivos.
+838. Implemente, em Haskell, uma função que calcule o máximo divisor comum entre dois
+números inteiros positivos.
+9. Implemente, em Haskell, uma função que calcule o mı́nimo múltiplo comum entre dois
+números inteiros positivos.
+-}
+
+numeroPerfeito :: Int -> Bool
+numeroPerfeito n = somaDivisores n (n-1) == n
+
+somaDivisores :: Int ->Int -> Int 
+somaDivisores n x
+  |x == 1 = 1
+  |mod n x == 0 = x + somaDivisores n (x-1)
+  |otherwise = somaDivisores n (x-1)
+
+
+--Questao 2
+ehPrimo :: Int -> Bool
+ehPrimo n = mod n 2 == 0
+
+--questao 3 
+fat :: Int -> Int
+fat 0 = 1
+fat n = n * fat(n-1) 
+
+--questao 5
+enesimoFib :: Int -> Int
+enesimoFib 0 = 1
+enesimoFib 1 = 1
+enesimoFib 2 = 1
+enesimoFib n = enesimoFib (n-1) + enesimoFib (n-2)
+
+--questao 6 
+restoDiv:: Int -> Int -> Int
+restoDiv _ 0 = error "erro divisao por 0"
+restoDiv x y 
+  |x < y = x
+  |x == y = 0
+  |otherwise = restoDiv (x-y) y
+
+--questao 7
+divInteira :: Int -> Int -> Int
+divInteira _ 0 = error "divisao por zero"
+divInteira x y 
+  |x < y = 0
+  |x == y = 1
+  |otherwise = 1 + divInteira (x - y) y
