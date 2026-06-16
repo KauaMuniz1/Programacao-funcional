@@ -1,7 +1,7 @@
 import Control.Concurrent (Chan)
-import Control.Monad.Cont (label)
+import Control.Monad.Cont (label, cont)
 import GHC.Float (fromRat'')
-import Distribution.TestSuite (Result(Error))
+import Distribution.TestSuite (Result(Error), Test (Test))
 import GHC.IO.Device (IODevice(dup))
 import Data.Char (isAlpha)
 import Data.Time.Format.ISO8601 (yearFormat)
@@ -190,7 +190,7 @@ selectElementos [] _ _ = []
 selectElementos (x:xs) y z 
    |z < y = error "intervalo negativo"
    |y > 1 = selectElementos(xs) (y-1) (z-1)
-   |y == 1 && z > 1 =  head(x:xs) : selectElementos(xs) y (z-1)
+   |y == 1 && z > 1 =  x : selectElementos(xs) y (z-1)
    |y == z = [x]
 
 
@@ -199,6 +199,100 @@ selectElementosZF :: [Char] -> Int -> Int -> [Char]
 selectElementosZF [] _ _ = []
 selectElementosZF lista y z = [letra| (pos,letra) <- zip [1..]lista, pos >= y, pos <= z]
 
+
+
+
+{-
+13. Escreva uma função que empacote duplicatas consecutivas de
+elementos de lista em sublistas. Se uma lista contém elementos
+repetidos, eles devem ser colocados em sublistas separadas.
+Exemplo:
+['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e'] -> ["aaaa","b","cc","aa","d","eeee"]
+-}
+subListDuplicatas :: [Char] -> [Char] 
+subListDuplicatas [] = []
+subListDuplicatas (x:xs) = (x:contVezesList xs x) ++ subListDuplicatas (drop (length (contVezesList xs x)) xs)
+
+contVezesList :: [Char] -> Char -> [Char]
+contVezesList [] _ = []
+contVezesList (x:xs) y
+   | y == x    = x : contVezesList xs y
+   | otherwise = [] 
+--nao consegui fazer a questao
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{-
+21. O índice de massa corporal (IMC) é uma medida simples para
+classiﬁcar o peso de adultos. O IMC de um indivíduo é calculado
+como o valor do peso (em quilogramas) a dividir pelo quadrado
+da altura (em metros):
+IMC = /²
+Por exemplo: um indivíduo com 70 Kg e 1.70m de altura tem IMC
+igual a 70/1. 70² ≈ 24. 22.
+Classiﬁcamos o resultado nos seguinte intervalos:
+● IMC < 18.5 baixo peso
+● 18.5 ≤ IMC < 25 peso normal
+● 25 ≤ IMC < 30 excesso de peso
+● 30 ≤ IMC obesidade
+Escreva uma deﬁnição da função
+classiﬁca :: [(Int, Float, Float)] -> [(Int, String)]
+que determina a classiﬁcação acima para uma lista composta
+por um ID, o peso em quilogramas e a altura em metros e produz
+como saída a uma lista contendo o ID e sua respectiva
+classiﬁcação.
+-}
+
+classifica :: [(Int, Float, Float)] -> [(Int, String)]
+classifica [] = []
+classifica ((id, peso, altura): xs) 
+   |imc >= 30 = (id, "Obesidade"): classifica xs
+   |imc <30 && imc >= 25 = (id, "Sobrepeso"): classifica xs
+   |imc < 25 && imc >= 18.5 = (id, "peso normal"): classifica xs
+   |otherwise = (id,"peso baixo"): classifica xs
+      where 
+         imc = peso /(altura ^ 2)
+
+
+
+
+{-
+22. Deﬁna uma função
+divprop ∶∶ Integer → [Integer]
+usando uma lista em compreensão para calcular a lista de
+divisores próprios de um inteiro positivo (i.e. inferiores ao número
+dado).
+Exemplo:
+divprop 10 = [1, 2, 5].
+-}
+
+divprop :: Integer -> [Integer]
+divprop x = auxDivProp x 1
+
+auxDivProp :: Integer -> Integer -> [Integer]
+auxDivProp x y 
+   |x == y = []
+   |mod x y == 0 = y : auxDivProp x (y+1)
+   |otherwise = auxDivProp x (y+1)
+
+
+--usandoZF 
+divpropZF :: Integer -> [Integer]
+divpropZF 1 = [1]
+divpropZF a = [x | x <- [1..a-1], mod a x == 0]
 
 {-
 25.A cifra de César é um dos métodos mais simples para codiﬁcar
@@ -225,10 +319,6 @@ desloca c n (a:x)
    |c /= a = desloca c n x 
    |n > length (a:x) = desloca c (mod n (length (a:x))) (a:x)
    |otherwise = desloca (head x) (n-1) (x) 
-
-
-
-
 
 
 
