@@ -218,7 +218,24 @@ contVezesList [] _ = []
 contVezesList (x:xs) y
    | y == x    = x : contVezesList xs y
    | otherwise = [] 
---nao consegui fazer a questao
+
+
+
+{-
+14. Considerando:
+Reg = [(15,”Ana”),(22,”Pedro”),(2,”Maria”),(12,”João”),(14,”Pablo”),(23,”Poliana”)]
+Implemente uma função para ordenar o registro considerando as
+idades.
+-}
+
+ordenaRegistros :: [(Int, String)] -> [(Int, String)]
+ordenaRegistros [] = []
+ordenaRegistros ((a,b):xs) = insere (a,b) (ordenaRegistros xs)
+
+insere :: (Int, String) -> [(Int, String)] -> [(Int, String)]
+insere (a,b) [] = [(a,b)]
+insere (a,b) ((c,d):xs) | a < c = (a,b):(c,d):xs
+                        | otherwise = (c,d) : insere (a,b) xs
 
 
 
@@ -228,11 +245,62 @@ contVezesList (x:xs) y
 
 
 
+{-
+15. Implemente uma função que recebe duas listas e retorna outra
+lista com os elementos intercalados.
+Exemplo:
+intercala [1,2,3] [4,6] -> [1,4,2,6,3]
+intercala [] [4,6] -> [4,6]
+-}
+intercala :: [Integer] -> [Integer] -> [Integer]
+intercala [] x = x 
+intercala x [] = x 
+intercala (x:xs) (y:ys) = x : y : intercala xs ys
+
+--usandoZF 
+--intercalaZF :: [Integer] -> [Integer] -> [Integer]
+--intercalaZF [] x = x 
+--intercalaZF x [] = x 
+--intercalaZF lista1 lista2 = [x | x <- ]
+
+
+{-
+16. Implemente uma função que recebe uma lista de números e
+transforma as repetições em sublistas de dois elementos. Sendo o
+primeiro elemento o número de repetições encontradas e o
+segundo é o número que se repete.
+Exemplo:
+contarRepetidos [2,2,2,3,4,4,2,9] -> [[3,2],[1,3],[2,4],[1,9]]
+-}
+--contarRepetidos :: [Int] -> [[Int]]
+--contarRepetidos [] = []
+--contarRepetidos a 
+   |
+--nao consegui fazer essa
 
 
 
+{-
+18. Deﬁna a função metade :: [a] -> ([a],[a]) que divide uma lista em
+duas metades.
+Exemplo:
+metade [1,2,3,4,5,6] -> ([1,2,3],[4,5,6])
+metade [1,2,3,4,5] -> ([1,2],[3,4,5])
+-}
+metade :: [Int] -> ([Int], [Int])
+metade [] = ([], [])
+metade lista = (take metadelista lista, drop metadelista lista)
+   where metadelista = div (length lista) 2
 
 
+{-
+19. Crie uma função que adiciona um elemento no ﬁnal da lista dada
+como parâmetro.
+Exemplo:
+add_ﬁm [1, 2, 3] 10 -> [1, 2, 3, 10]
+-}
+add_fim :: [Int]-> Int -> [Int]
+add_fim (x:xs) y = (x:xs) ++ [y]
 
 
 {-
@@ -294,6 +362,21 @@ divpropZF :: Integer -> [Integer]
 divpropZF 1 = [1]
 divpropZF a = [x | x <- [1..a-1], mod a x == 0]
 
+
+
+{-
+24.Um trio (x, y, z) de inteiros positivos diz-se pitagórico se
+² + ² = ² . Deﬁna a função
+pitagóricos ∶∶ Integer → [(Integer, Integer, Integer)]
+que calcule todos os trios pitagóricos cujas componentes não
+ultrapassem o argumento. Por exemplo: pitagóricos 10 = [(3, 4, 5), (4,
+3, 5), (6, 8, 10), (8, 6, 10)].
+-}
+pitagoricos:: Integer -> [(Integer,Integer,Integer)]
+pitagoricos 0 = []
+pitagoricos a = [(x,y,z) | x <- [1..a], y <- [1..a], z <- [1..a], x ^2 + y^2 == z^2] 
+
+
 {-
 25.A cifra de César é um dos métodos mais simples para codiﬁcar
 um texto: cada letra é substituída pela que dista k posições à
@@ -320,7 +403,7 @@ desloca c n (a:x)
    |n > length (a:x) = desloca c (mod n (length (a:x))) (a:x)
    |otherwise = desloca (head x) (n-1) (x) 
 
-
+--nao consegui terminar essa 
 
 
 
