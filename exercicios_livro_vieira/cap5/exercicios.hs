@@ -36,3 +36,35 @@ concatFunc (x:xs) = x ++ concatFunc xs
 concatFuncZF :: [[Int]] -> [Int]
 concatFuncZF [] = []
 concatFuncZF lista = [x | subLista <- lista, x <- subLista]
+
+
+{-
+Defina uma função somaPar que dê como resultado a lista das somas dos elementos de
+uma lista de pares de números.
+-}
+
+somaPar :: [(Int,Int)] -> [Int]
+somaPar [] = []
+somaPar ((x,xs):y) = (x+xs) : somaPar y 
+
+--usando ZF
+somaParZF :: [(Int, Int)] -> [Int] 
+somaParZF [] = []
+somaParZF lista = [x + y | (x,y) <- lista]
+
+
+
+--função que faz pares de duas listas quaisquer
+fazPares :: [Int] -> [Int] -> [(Int,Int)]
+fazPares l1 l2 = [(x,y) | x <-l1, y <- l2]
+
+--A função pares que constrói uma lista de pares de inteiros todos menores que um determinado valor inteiro n:
+paresMenores:: Int -> [(Int, Int)]
+paresMenores n = [(x,y) | x <- [1.. (n)], y <- [1..(n)]]
+
+
+--Os triângulos retângulos de lados menores ou iguais a um certo valor inteiro:
+trirets ::  Int -> [(Int, Int, Int)]
+trirets 0 = []
+trirets n = [(x,y,z) | x <- [1..n], y <- [1..n], z <- [1..n], (x ^2) + (y^2) == z^2]
+
