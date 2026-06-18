@@ -3,9 +3,11 @@ import Control.Monad.Cont (label, cont)
 import GHC.Float (fromRat'')
 import Distribution.TestSuite (Result(Error), Test (Test))
 import GHC.IO.Device (IODevice(dup))
-import Data.Char (isAlpha)
+import Data.Char
 import Data.Time.Format.ISO8601 (yearFormat)
 import Control.Applicative (Alternative(some))
+import Data.List
+
 --funcao que retorna se um numero pertence ou nao a uma lista
 
 pertenceLista :: [Int] -> Int -> Bool
@@ -32,8 +34,8 @@ enesimoInt :: Int -> [Int] -> Int
 enesimoInt _ [] = error "lista vazia"
 enesimoInt y (x : xs)
    |y == 0 = x
-   |otherwise = enesimoInt (y-1) (xs)
-
+   |otherwise = enesimoInt (y-1) (xs)  
+   
 
 
 {-
@@ -151,8 +153,6 @@ intercedeZF lista1 lista2 = [(x) | x <- lista1, y <- lista2, x == y ]
 
 
 
-
-
 {-11. Implemente a função 'split', que recebe um número inteiro n e uma
 lista de números inteiros e retorna uma tupla onde o primeiro
 elemento é uma lista dos itens maiores que n e o segundo
@@ -173,8 +173,13 @@ splitRecursao n (a:x) = (prim, a:seg)
    where
       (prim,seg) = split(n-1) x
 
-
-
+--usando zf
+splitZF :: Int -> [Int] -> ([Int], [Int])
+splitZF _ [] = ([],[])
+splitZF n lista = (l1,l2)
+   where
+      l1 = [x | x <- lista, x > n]
+      l2 = [y | y <- lista, y < n]
 
 {-
 12. Escreva uma função que dados dois índices, m e n, extraia da
@@ -241,10 +246,6 @@ insere (a,b) ((c,d):xs) | a < c = (a,b):(c,d):xs
 
 
 
-
-
-
-
 {-
 15. Implemente uma função que recebe duas listas e retorna outra
 lista com os elementos intercalados.
@@ -272,13 +273,30 @@ segundo é o número que se repete.
 Exemplo:
 contarRepetidos [2,2,2,3,4,4,2,9] -> [[3,2],[1,3],[2,4],[1,9]]
 -}
---contarRepetidos :: [Int] -> [[Int]]
---contarRepetidos [] = []
---contarRepetidos a 
-   |
---nao consegui fazer essa
+contarRepetidos :: [Int] -> [[Int]]
+contarRepetidos [] = []
+contarRepetidos (x:xs) = [1 + length repetidos, x] : contarRepetidos resto
+   where 
+      repetidos = [a| a <- xs, a == x]
+      resto = [r | r <- xs, r /= x]
+
+{-
+17. Deﬁna, em Haskell, uma função f que, dadas uma lista i de inteiros
+e uma lista l qualquer, retorne uma nova lista constituı́da pela
+lista l seguida de seus elementos que têm posição indicada na
+lista i, conforme o exemplo a seguir:
+f [2,1,4] [’a’, ’b’, ’c’, ’d’] -> [’a’, ’b’, ’c’, ’d’, ’b’, ’a’, ’d’].
+-}
+f:: [Int] -> [Char] -> [Char]
+f _ [] = []
+f [] _ = []
+f (a:as) listaC = listaC ++ (listaC !! a) : f as listaC
 
 
+
+--usandoZF
+fZF:: [Int] -> [Char] -> [Char]
+fZF lista1 lista2 = lista2 ++ [lista2 !! (pos -1) | pos <- lista1]
 
 {-
 18. Deﬁna a função metade :: [a] -> ([a],[a]) que divide uma lista em
@@ -301,6 +319,26 @@ add_ﬁm [1, 2, 3] 10 -> [1, 2, 3, 10]
 -}
 add_fim :: [Int]-> Int -> [Int]
 add_fim (x:xs) y = (x:xs) ++ [y]
+
+
+{-
+20. Considere que o preço de uma passagem de avião em um trecho
+pode variar dependendo da idade do passageiro. Pessoas com 60
+anos ou mais pagam apenas 60% do preço total. Crianças até 10
+anos pagam 50% e bebês (abaixo de 2 anos) pagam apenas 10%.
+Elabore uma função que tenha como entrada uma lista de tuplascomposta pelo valor da passagem e a idade do passageiro,
+respectivamente, e produza o valor total a ser pago
+-}
+passagemAviao :: [(Double, Int)] -> Double 
+passagemAviao [] = 0 
+passagemAviao ((x,y): xs)
+   |y >= 60 = (x * 0.6) + passagemAviao xs 
+   |y >= 2 && y <= 10 = (x * 0.5) + passagemAviao xs 
+   |y < 2 && y >= 0 = (x * 0.1) + passagemAviao xs 
+   |otherwise = x + passagemAviao xs 
+
+
+
 
 
 {-
@@ -365,6 +403,35 @@ divpropZF a = [x | x <- [1..a-1], mod a x == 0]
 
 
 {-
+23.Um inteiro positivo n diz-se perfeito se for igual à soma dos seus
+divisores (excluindo o próprio n). Defina uma função
+perfeitos ∶∶ Integer → [Integer]
+
+que calcula a lista de todos os números perfeitos até um limite
+dado como argumento.
+Exemplo:
+perfeitos 500 -> [6, 28, 496].
+Sugestão: utilize a solução do exercício anterior.
+-}
+
+
+perfeitos :: Int ->[Int]
+perfeitos n 
+   |n == 0 = []
+   |ehPerfeito(n) == True = [n] ++ perfeitos(n-1)
+   |otherwise = perfeitos(n-1)
+
+ehPerfeito :: Int -> Bool
+ehPerfeito 1 = False
+ehPerfeito n = somaDivisores n (n-1) == n 
+
+somaDivisores :: Int -> Int -> Int
+somaDivisores n m |m == 1 = 1
+                  |mod n m == 0 = m + somaDivisores n (m-1)
+                  |otherwise = somaDivisores n (m-1)
+
+
+{-
 24.Um trio (x, y, z) de inteiros positivos diz-se pitagórico se
 ² + ² = ² . Deﬁna a função
 pitagóricos ∶∶ Integer → [(Integer, Integer, Integer)]
@@ -408,33 +475,50 @@ desloca c n (a:x)
 
 
 
+
 {-
-23.Um inteiro positivo n diz-se perfeito se for igual à soma dos seus
-divisores (excluindo o próprio n). Defina uma função
-perfeitos ∶∶ Integer → [Integer]
-
-que calcula a lista de todos os números perfeitos até um limite
-dado como argumento.
-Exemplo:
-perfeitos 500 -> [6, 28, 496].
-Sugestão: utilize a solução do exercício anterior.
+26. Deﬁna uma função
+forte ∶∶ String → Bool
+para veriﬁcar se uma palavra-passe dada numa cadeia de
+caracteres é forte segundo os seguintes critérios: deve ter 8
+caracteres ou mais e pelo menos uma letra maiúscula, uma letra
+minúscula e um algarismo.
+Sugestão: use a função or ∶∶ [Bool] → Bool e listas em
+compreensão.
 -}
+forte :: String -> Bool
+forte senha = comprimento && letraMaiusc && letraMinusc && algarismo 
+   where    
+      comprimento = length senha >= 8
+      letraMaiusc = or [isUpper x | x <- senha]
+      letraMinusc = or [isLower x | x <- senha]
+      algarismo = or [isDigit x | x <- senha]
 
 
-perfeitos :: Int ->[Int]
-perfeitos n 
-   |n == 0 = []
-   |ehPerfeito(n) == True = [n] ++ perfeitos(n-1)
-   |otherwise = perfeitos(n-1)
 
-ehPerfeito :: Int -> Bool
-ehPerfeito 1 = False
-ehPerfeito n = somaDivisores n (n-1) == n 
+{-
+27. A função nub ∶∶ Eq a ⇒ [a] → [a] do módulo Data.List elimina
+ocorrências de elementos repetidos numa lista (nub em inglês
+signiﬁca essência). Por exemplo: nub banana = ban. Escreva uma
+deﬁnição recursiva para esta função.
+Sugestão: use uma lista em compreensão com uma guarda para
+eliminar elementos de uma lista
+-}
+nubb :: Eq a => [a] -> [a]
+nubb [] = []
+nubb (x:xs) = x:  nubb [y| y <- (xs), x /= y]
 
-somaDivisores :: Int -> Int -> Int
-somaDivisores n m |m == 1 = 1
-                  |mod n m == 0 = m + somaDivisores n (m-1)
-                  |otherwise = somaDivisores n (m-1)
+
+{-
+28. Escreva uma deﬁnição da função intersperse ∶∶ a → [a] → [a] do
+módulo Data.List que intercala um valor entre os elementos de
+uma lista.
+Exemplo:
+intersperse '-' banana -> b-a-n-a-n-a.
+-}
+interspersee :: a -> [a] -> [a] 
+interspersee _ [] = []
+interspersee y (x:xs) = head (x:xs) : y: interspersee y (xs)
 
 {-
 29. Escreva uma definição da função
