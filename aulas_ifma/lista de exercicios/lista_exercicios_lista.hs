@@ -459,21 +459,39 @@ para cifrar uma cadeia de caracteres usando um deslocamento
 dado. Note que cifrar (−n) é a função inversa de cifrar n, pelo que
 a mesma função pode servir para codiﬁcar e decodiﬁcar.
 -}
-
-alfabeto = ['a'..'z']
-
-desloca :: Char -> Int -> String -> Char
-desloca c 0 _ = c
-desloca c n [] = desloca c n alfabeto
-desloca c n (a:x)
-   |c /= a = desloca c n x 
-   |n > length (a:x) = desloca c (mod n (length (a:x))) (a:x)
-   |otherwise = desloca (head x) (n-1) (x) 
-
---nao consegui terminar essa 
+{- 
+posicaocifra :: Char -> [Char] -> Int 
+posicaocifra l (x:xs) 
+   |l /= x = 1+ posicaocifra l xs
+   |otherwise = 1
 
 
+cifra :: Int -> String -> String 
+cifra _ [] = []
+cifra k (x:xs)
+    |x == ' ' = ' ' : cifra k xs
+    |otherwise = alfabeto !! k2 : cifra k xs 
+      where 
+         alfabeto = ['A'..'Z']
+         posicaoL = posicaocifra x alfabeto
+         k2 = mod (k+ posicaoL - 1) 26
+-}
 
+
+p::Char->[Char]->Int
+p l (x:xs)
+    | l /= x = 1 + p l xs
+    | otherwise = 1
+
+cifra::Int->String->String
+cifra _ [] = []
+cifra k (x:xs)
+    | x == ' ' = ' ':cifra k xs
+    |otherwise = alfa!!k2:cifra k xs 
+    where
+        alfa = ['A'..'Z']
+        posicaoL = p x alfa
+        k2 = mod (k + posicaoL - 1) 26
 
 
 {-
