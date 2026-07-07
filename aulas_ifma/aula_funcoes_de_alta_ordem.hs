@@ -29,3 +29,23 @@ verificaPositivo :: [Int] -> Bool
 verificaPositivo = all ( > 0) 
 
 --q4
+minFunc :: (Int -> Int) -> Int -> Int
+minFunc f n = minimum (map f [0..n])
+
+--q5
+todosIguais :: (Int -> Int) -> Int -> Bool
+todosIguais f n =
+    all (== head valores) valores
+    where valores = map f [0..n]
+
+--q6
+todosPositivos :: (Int -> Int) -> Int -> Bool
+todosPositivos f n =
+    all (>=0) (map f [0..n])
+
+
+--q7
+crescente :: (Int -> Int) -> Int -> Bool
+crescente f n =
+    and (zipWith (<=) valores (tail valores))
+    where valores = map f [0..n]
