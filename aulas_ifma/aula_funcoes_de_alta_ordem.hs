@@ -1,3 +1,4 @@
+import GHC.Exts.Heap (GenClosure(fun))
 {-
 ▪Defina funções que tomem uma lista de inteiros L e
 ▪Retorne a lista dos quadrados dos elementos de L
@@ -28,24 +29,41 @@ retornaSomaQuadrados lista = foldr (+) 0 (retornaQuadrados lista)
 verificaPositivo :: [Int] -> Bool 
 verificaPositivo = all ( > 0) 
 
---q4
-minFunc :: (Int -> Int) -> Int -> Int
-minFunc f n = minimum (map f [0..n])
+--q4 
+minFunc :: (Int -> Int ) -> Int-> Int 
+minFunc func lista = minimum (map func [0..lista])
 
---q5
-todosIguais :: (Int -> Int) -> Int -> Bool
-todosIguais f n =
-    all (== head valores) valores
-    where valores = map f [0..n]
+--q5 
+todosIguais:: (Int -> Int) -> Int -> Bool 
+todosIguais f n = all (== head valores) valores
+    where 
+        valores = map f [0.. n]
+
 
 --q6
-todosPositivos :: (Int -> Int) -> Int -> Bool
-todosPositivos f n =
-    all (>=0) (map f [0..n])
+maioresQueZero ::  (Int -> Int) -> Int -> Bool 
+maioresQueZero f n = all (>= 0) valores 
+    where 
+        valores = map f [0..n] 
 
+
+--versao melhorada{
+-- maioresQueZero :: (Ord a,Num a) => (Float -> a) -> Float -> Bool 
+-- maioresQueZero f n = all (>= 0) valores 
+--     where 
+--         valores = map f [0..n] 
+--}
 
 --q7
-crescente :: (Int -> Int) -> Int -> Bool
-crescente f n =
-    and (zipWith (<=) valores (tail valores))
-    where valores = map f [0..n]
+ordemCrescente :: (Int -> Int) -> Int -> Bool 
+ordemCrescente func x = crescente lista 
+    where 
+        lista = map func [0..x]
+
+
+crescente :: [Int] -> Bool 
+crescente [] = True 
+crescente [x] = True 
+crescente (x:xs) 
+    |x >= head xs = crescente xs 
+    |otherwise = False 
