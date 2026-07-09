@@ -164,3 +164,78 @@ somaListasZF :: [Int] -> [Int] -> [Int]
 somaListasZF [] [] = []
 somaListasZF lista1 lista2 = [x + a| (x,a) <- zip lista1 lista2 ]
 
+
+
+{-
+Questão 1 — Desestruturação de tuplas e filtragem
+Você recebe uma lista de tuplas (nome, idade) representando pessoas. Escreva uma expressão ZF que retorne apenas os nomes das pessoas que têm mais de 18 anos E cujo nome começa com a letra 'A'.
+Entrada e saída esperada:
+pessoas = [("Ana", 22), ("Bruno", 17), ("Alice", 30), ("Alberto", 15), ("Carlos", 25)]
+ 
+-- resultado esperado:
+-- ["Ana", "Alice"]
+Dica: use desestruturação (nome, idade) diretamente no gerador da ZF, e lembre que head nome dá a primeira letra.
+-}
+
+
+
+
+
+
+
+{-
+20 questões baseadas nos tópicos estudados (map, filter, foldr, foldl, all, any, aplicação parcial, composição de funções, classes Eq/Ord/Show/Num).
+
+
+    1. 1. Explique com suas palavras o que é uma função de alta ordem.
+    2. 2. Escreva uma função usando map que dobre todos os elementos de uma lista.
+    3. 3. Escreva uma função usando map que converta uma lista de Int em seus quadrados.
+    4. 4. Escreva uma função usando filter que mantenha apenas os números pares.
+    5. 5. Escreva uma função usando filter que mantenha apenas números positivos.
+    6. 6. Usando foldr, calcule a soma de uma lista.
+    7. 7. Usando foldl, calcule o produto de uma lista.
+    8. 8. Explique a diferença entre foldr e foldl com um exemplo.
+    9. 9. Escreva uma função usando all que verifique se todos os elementos são maiores que 10.
+    10. 10. Escreva uma função usando any que verifique se existe algum elemento negativo.
+    11. 11. Escreva uma função que receba f e n e retorne o menor valor de f aplicada em [0..n].
+    12. 12. Escreva uma função que teste se todos os valores de f em [0..n] são iguais.
+    13. 13. Escreva uma função que teste se todos os valores de f em [0..n] são >=0.
+    14. 14. Escreva uma função que teste se os valores de f em [0..n] estão em ordem crescente.
+    15. 15. O que é aplicação parcial? Dê um exemplo usando (>=0) ou (+1).
+    16. 16. O que é composição de funções? Reescreva map (\x -> (x+1)*2) usando composição quando possível.
+    17. 17. O que significa Eq? Quando ela é necessária?
+    18. 18. Qual a diferença entre Eq e Ord?
+    19. 19. Em quais classes pertencem Int, Char e Bool dentre Eq, Ord, Show e Num?
+    20. 20. Escreva a assinatura mais geral de uma função que compare dois valores usando ==.
+-}
+    
+
+--2 
+dobrarElem :: Num a => [a] -> [a]
+dobrarElem lista = map (*2) lista
+
+--3 
+quadrarElem :: Num a => [a] ->[a]
+quadrarElem lista = map (^2) lista
+
+
+
+--4
+numerosPares :: [Int] -> [Int]
+numerosPares = filter even 
+
+--5 
+numerosPositivos :: [Int] -> [Int]
+numerosPositivos = filter (>0)
+
+--6
+somaDeUmaLista :: [Int] -> Int 
+somaDeUmaLista = foldr (+) 0
+
+--7
+produtoDeUmaLista :: [Int] -> Int 
+produtoDeUmaLista = foldl (*) 1
+
+--8
+maioresQueDez :: [Int] -> Bool
+maioresQueDez = all (> 10)
